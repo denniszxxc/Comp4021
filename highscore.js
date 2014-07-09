@@ -17,16 +17,16 @@ function getHighScoreTable() {
         // Contruct the cookie name
         var name = "player" + i;
         // Get the cookie value using the cookie name
-        var cookieValue = getCookie(name);
+        var cookie_value = getCookie(name);
         // If the cookie does not exist exit from the for loop
-        if (cookieValue == null) {
+        if (cookie_value == null) {
             break;
         }
         // Extract the name and score of the player from the cookie value
-        var record = cookieValue,split("~");
+        var record = cookie_value,split("~");
         // Add a new score record at the end of the array
-        var recordScore = parInt(record[1]);
-        table.push(new ScoreRecord(record[0], recordScore) );
+        var record_score = parInt(record[1]);
+        table.push(new ScoreRecord(record[0], record_score) );
     }
 
     return table;
@@ -43,8 +43,9 @@ function setHighScoreTable(table) {
         if (i >= table.length) break;
 
         // Contruct the cookie name
-
+        var cookie_name = "player" + i;
         // Store the ith record as a cookie using the cookie name
+        setCookie(cookie_name, table[i].name + "~" + table[i].score );
     }
 }
 
