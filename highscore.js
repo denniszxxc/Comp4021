@@ -15,14 +15,18 @@ function getHighScoreTable() {
 
     for (var i = 0; i < 10; i++) {
         // Contruct the cookie name
-
+        var name = "player" + i;
         // Get the cookie value using the cookie name
-
+        var cookieValue = getCookie(name);
         // If the cookie does not exist exit from the for loop
-
+        if (cookieValue == null) {
+            break;
+        }
         // Extract the name and score of the player from the cookie value
-
+        var record = cookieValue,split("~");
         // Add a new score record at the end of the array
+        var recordScore = parInt(record[1]);
+        table.push(new ScoreRecord(record[0], recordScore) );
     }
 
     return table;
