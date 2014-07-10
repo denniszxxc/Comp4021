@@ -58,15 +58,21 @@ function addHighScore(record, node) {
     var name = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
 
     // Set the attributes and create the text
-
+    name.setAttribute("x",100);
+    name.setAttribute("dy",40);
+    name.appendChild(svgdoc.createTextNode(record.name));
     // Add the name to the text node
+    node.appendChild(name);
 
     // Create the score text span
     var score = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
 
     // Set the attributes and create the text
+    score.setAttribute("x",200);
+    score.appendChild(svgdoc.createTextNode(record.score));
 
     // Add the name to the text node
+    node.appendChild(score);
 }
 
     
