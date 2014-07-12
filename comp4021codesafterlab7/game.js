@@ -197,15 +197,15 @@ function keydown(evt) {
     var keyCode = (evt.keyCode)? evt.keyCode : evt.getKeyCode();
 
     switch (keyCode) {
-        case "N".charCodeAt(0):
+        case "A".charCodeAt(0):
             player.motion = motionType.LEFT;
             break;
 
-        case "M".charCodeAt(0):
+        case "D".charCodeAt(0):
             player.motion = motionType.RIGHT;
             break;
 
-        case "Z".charCodeAt(0):
+        case "W".charCodeAt(0):
             if (player.isOnPlatform()) {
                 player.verticalSpeed = JUMP_SPEED;
             }
@@ -226,11 +226,11 @@ function keyup(evt) {
     var keyCode = (evt.keyCode)? evt.keyCode : evt.getKeyCode();
 
     switch (keyCode) {
-        case "N".charCodeAt(0):
+        case "A".charCodeAt(0):
             if (player.motion == motionType.LEFT) player.motion = motionType.NONE;
             break;
 
-        case "M".charCodeAt(0):
+        case "D".charCodeAt(0):
             if (player.motion == motionType.RIGHT) player.motion = motionType.NONE;
             break;
     }
@@ -253,7 +253,7 @@ function collisionDetection() {
 
             table = getHighScoreTable();
 
-            var name = prompt("What is your name?", "");
+            var name = prompt("What is your name?", ""); //change
             var record = new ScoreRecord(name, score);
 
             var pos = table.length;
