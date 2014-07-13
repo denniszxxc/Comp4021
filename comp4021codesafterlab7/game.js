@@ -380,12 +380,12 @@ function gamePlay() {
 // the position of the player
 //
 function updateScreen() {
-    // Transform the player
-    player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
-
-    // Update player face direction 
+    // Update player face direction and position 
     if (player.face_direction == "LEFT" ) {
         player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")" + "translate("  +PLAYER_SIZE.w + ", 0) scale(-1, 1)");        
+    } else {
+        player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
+
     }
 
     // Calculate the scaling and translation factors
