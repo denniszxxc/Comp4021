@@ -22,6 +22,7 @@ function Player() {
     this.position = PLAYER_INIT_POS;
     this.motion = motionType.NONE;
     this.verticalSpeed = 0;
+    this.face_direction = "RIGHT";
 }
 
 Player.prototype.isOnPlatform = function() {
@@ -199,10 +200,12 @@ function keydown(evt) {
     switch (keyCode) {
         case "A".charCodeAt(0):
             player.motion = motionType.LEFT;
+            player.face_direction = "LEFT";
             break;
 
         case "D".charCodeAt(0):
             player.motion = motionType.RIGHT;
+            player.face_direction = "RIGHT";
             break;
 
         case "W".charCodeAt(0):
@@ -379,6 +382,11 @@ function gamePlay() {
 function updateScreen() {
     // Transform the player
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
+
+    // Update player face direction 
+    if (player.face_direction == "LEFT" ) {
+        player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")" + "translate("  +PLAYER_SIZE.w + ", 0) scale(-1, 1)");        
+    }
 
     // Calculate the scaling and translation factors
     var scale = new Point(zoom, zoom);
