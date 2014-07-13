@@ -138,7 +138,7 @@ function load(evt) {
     player = new Player();
 
     // Create the monsters
-    //createMonster(200, 15);
+    createMonster(200, 15);
     //createMonster(400, 270);
 
     // Start the game interval
