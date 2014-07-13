@@ -41,6 +41,7 @@ Player.prototype.isOnPlatform = function() {
              (this.position.x == (x + w) && this.motion == motionType.LEFT)) &&
             this.position.y + PLAYER_SIZE.h == y) return true;
     }
+    // check moving platform
     if (this.position.y + PLAYER_SIZE.h == SCREEN_SIZE.h) return true;
 
     return false;
@@ -51,6 +52,7 @@ Player.prototype.collidePlatform = function(position) {
     for (var i = 0; i < platforms.childNodes.length; i++) {
         var node = platforms.childNodes.item(i);
         if (node.nodeName != "rect") continue;
+        if (node.getAttribute("id") == "moving_platform") continue;
 
         var x = parseFloat(node.getAttribute("x"));
         var y = parseFloat(node.getAttribute("y"));
@@ -71,6 +73,34 @@ Player.prototype.collidePlatform = function(position) {
         }
     }
 }
+
+Player.prototype.collideMovePlatform = function(position) {
+    var node = svgdoc.getElementById("moving_platform");
+
+    var x = parseFloat(node.getAttribute("x"));
+    var y = parseFloat(node.getAttribute("y"));
+    var w = parseFloat(node.getAttribute("width"));
+    var h = parseFloat(node.getAttribute("height"));
+    var pos = new Point(x, y);
+    var size = new Size(w, h);
+
+    if (intersect(position, PLAYER_SIZE, pos, size)) {
+        position.y -= VERTICAL_DISPLACEMENT;
+        if (intersect(position, PLAYER_SIZE, pos, size)) {
+            position.x = this.position.x;
+        }
+        if (intersect(position, PLAYER_SIZE, pos, size)) {
+            if (this.position.y >= y + h)
+                position.y = y + h;
+            else
+                position.y = y - PLAYER_SIZE.h;
+            this.verticalSpeed = 0;
+        }
+    }
+
+}
+
+
 
 Player.prototype.collideScreen = function(position) {
     if (position.x < 0) position.x = 0;
@@ -107,11 +137,14 @@ var canShoot = true;                        // A flag indicating whether the pla
 
 var MONSTER_SIZE = new Size(40, 60);        // The speed of a bullet
 
+var MOVING_PLATFORM_TOP = 460;              // Y axis moving range of the moving platform
+var MOVING_PLATFORM_DOWN = 520;
 
 //
 // Variables in the game
 //
 var motionType = {NONE:0, LEFT:1, RIGHT:2}; // Motion enum
+var movingPlatformDirection = "UP";         // save the movement direction of the moving platform
 
 var svgdoc = null;                          // SVG root document node
 var player = null;                          // The player object
@@ -321,6 +354,29 @@ function moveBullets() {
     }
 }
 
+// This function update tht position of the moving platform
+function movePlatform() {
+    var platform = svgdoc.getElementById("moving_platform");
+    var y = parseInt(platform.getAttribute("y"));
+    
+    if(movingPlatformDirection=="UP"){
+        // move up 
+        platform.setAttribute("y",y - VERTICAL_DISPLACEMENT);
+    } else if (movingPlatformDirection == "DOWN") {
+        // move down
+        platform.setAttribute("y",y + VERTICAL_DISPLACEMENT);
+    }
+
+    if ( y < MOVING_PLATFORM_TOP) {
+        movingPlatformDirection = "DOWN";
+    }
+
+    if ( y > MOVING_PLATFORM_DOWN) {
+        movingPlatformDirection = "UP";
+    }
+
+}
+
 
 //
 // This function updates the position and motion of the player in the system
@@ -363,12 +419,15 @@ function gamePlay() {
     // Check collision with platforms and screen
     player.collidePlatform(position);
     player.collideScreen(position);
+    player.collideMovePlatform(position);
 
     // Set the location back to the player object (before update the screen)
     player.position = position;
 
     // Move the bullets
     moveBullets();
+
+    movePlatform();
 
     updateScreen();
 }

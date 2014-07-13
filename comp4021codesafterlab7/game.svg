@@ -93,34 +93,38 @@
             <rect style="fill:blue" width="600" height="20" x="0" y="540"/>
   
             <!-- 1st 440  --> 
-            <rect style="fill:blue " width="80" height="20" x="80" y="440"/>
+            <rect style="fill:blue" width="80" height="20" x="80" y="440"/>
 
             <!-- 2nd 400 --> 
-            <rect style="fill:blue " width="80" height="20" x="280" y="400"/>
+            <rect style="fill:blue" width="80" height="20" x="280" y="400"/>
             
             <!-- 3st 360 --> 
-            <rect style="fill:blue " width="120" height="20" x="480" y="360"/>
+            <rect style="fill:blue" width="120" height="20" x="480" y="360"/>
             
             <!-- 3st 320 --> 
-            <rect style="fill:blue " width="60" height="20" x="0" y="320"/>
+            <rect style="fill:blue" width="60" height="20" x="0" y="320"/>
             
             <!-- 240 -->
-            <rect style="fill:blue " width="80" height="20" x="520" y="240"/>
+            <rect style="fill:blue" width="80" height="20" x="520" y="240"/>
             
             <!-- 220 -->
-            <rect style="fill:blue " width="160" height="20" x="0" y="220"/> 
-            <rect style="fill:blue " width="60" height="20" x="540" y="220"/>         
+            <rect style="fill:blue" width="160" height="20" x="0" y="220"/> 
+            <rect style="fill:blue" width="60" height="20" x="540" y="220"/>         
             <!-- 200 -->
-            <rect style="fill:blue " width="80" height="20" x="280" y="200"/>
-            <rect style="fill:blue " width="40" height="20" x="560" y="200"/>
+            <rect style="fill:blue" width="80" height="20" x="280" y="200"/>
+            <rect style="fill:blue" width="40" height="20" x="560" y="200"/>
 
             <!-- 120 -->            
-            <rect style="fill:blue " width="160" height="20" x="120" y="120"/>
+            <rect style="fill:blue" width="160" height="20" x="120" y="120"/>
 
             <!-- 100 -->            
-            <rect style="fill:blue " width="80" height="20" x="420" y="100"/>
-            <rect style="fill:blue " width="60" height="20" x="0" y="100"/>
+            <rect style="fill:blue" width="80" height="20" x="420" y="100"/>
+            <rect style="fill:blue" width="60" height="20" x="0" y="100"/>
             
+        </g>
+        <g id="moving_platforms">
+        <!-- moving platform -->
+            <rect id="moving_platform" style="fill:red" width="80" height="20" x="400" y="500"/>
         </g>
 
         <g id="monsters"/>
