@@ -88,7 +88,7 @@ Player.prototype.collideScreen = function(position) {
 //
 // Below are constants used in the game
 //
-var PLAYER_SIZE = new Size(40, 40);         // The size of the player
+var PLAYER_SIZE = new Size(40, 75);         // The size of the player
 var SCREEN_SIZE = new Size(600, 560);       // The size of the game screen
 var PLAYER_INIT_POS  = new Point(0, 420);   // The initial position of the player
 
@@ -104,7 +104,7 @@ var BULLET_SPEED = 10.0;                    // The speed of a bullet
 var SHOOT_INTERVAL = 200.0;                 // The period when shooting is disabled
 var canShoot = true;                        // A flag indicating whether the player can shoot a bullet
 
-var MONSTER_SIZE = new Size(40, 40);        // The speed of a bullet
+var MONSTER_SIZE = new Size(40, 60);        // The speed of a bullet
 
 
 //
