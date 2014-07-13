@@ -10,14 +10,17 @@
     <clipPath id="gameareaclip">
       <rect x="20" y="20" width="600" height="560"/>
     </clipPath>
-    <pattern id="background_pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-      <rect width="20" height="20" style="fill:yellow"/>
-      <circle cx="10" cy="10" r="8" style="fill:lightyellow"/>
+    <pattern id="background_pattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="60" height="60" style="fill:#8B4513" x="0" y="0"/>
+      <rect width="60" height="60" style="fill:#E6E4D8" x="60" y="0"/>
+      <rect width="60" height="60" style="fill:#E6E4D8" x="0" y="60"/>
+      <rect width="60" height="60" style="fill:#8B4513" x="60" y="60"/>
+      
     </pattern>
     <radialGradient id="player_color">
       <stop offset="0.0" style="stop-color:yellow;stop-opacity:1"/>
       <stop offset="0.8" style="stop-color:yellow;stop-opacity:1"/>
-      <stop offset="1.0" style="stop-color:orange;stop-opacity:1"/>
+      <stop offset="1.0" style="stop-color:black;stop-opacity:1"/>
     </radialGradient>
     <g id="monster">
             <defs>
@@ -43,7 +46,6 @@
         </linearGradient>
        </defs>
        <g>
-        <title>Layer 1</title>
         <path stroke="#000" id="svg_2" d="m3.065049,58.451313c-3.316725,0.555786 -3.380678,-3.827496 -0.402277,-3.967354c-0.892817,-1.880531 -0.20944,-4.187714 1.110052,-5.928192c1.892263,-2.907753 4.738187,-5.79818 4.150229,-9.43848c-0.203575,-1.893719 -2.784657,-5.289051 1.21678,-4.802849c1.081893,-1.888599 0.452668,-4.668991 1.264071,-6.838293c0.708533,-4.112228 2.285631,-8.499933 0.608144,-12.576831c-1.057721,-2.170086 -3.745374,-3.598569 -3.456882,-6.251596c-0.303786,-2.587076 -0.203229,-5.193777 0.128479,-7.773257c1.29156,0.098451 2.728822,-0.247064 3.906332,0.284839c-0.008858,2.504268 2.607469,1.949449 2.293702,-0.178473c0.688258,-0.247878 1.827679,-0.035781 2.689551,-0.106367c3.83222,0 7.664341,0 11.496466,0c-0.43837,1.451871 0.747999,3.32315 2.250298,1.613832c-0.411009,-2.270752 3.03019,-1.519321 2.205513,0.434096c0.048523,2.587873 0.397526,5.265496 -0.402046,7.785567c-1.302307,1.006257 -1.322876,2.986881 -2.954206,4.173544c-1.311066,2.225104 -0.733335,4.913871 -0.587475,7.330695c0.555193,3.576916 1.471985,7.109543 1.700518,10.7274c-0.163477,1.967041 4.290466,1.38813 2.369976,3.809288c-2.098825,1.62513 -0.870234,4.369602 -0.039066,6.310364c1.640381,3.354485 5.098206,6.367546 4.576283,10.301731c-0.413864,1.718533 3.010502,1.13755 2.12038,3.350845c-0.025887,2.727741 -4.48436,0.974266 -6.459373,1.54718c-9.927336,0.109539 -19.857823,0.278629 -29.785445,0.19231l0,0z" stroke-opacity="null" fill="url(#svg_19)"/>
         <path id="svg_8" d="m7.06259,34.875c6.12491,2.624901 -3.99997,-13.624901 -3.87497,-13.624901" opacity="0.5" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#ffffff"/>
         <path id="svg_9" d="m-16.062201,20.500099" opacity="0.5" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#ffffff"/>
@@ -53,31 +55,31 @@
         </g>
         <path stroke="#000" transform="rotate(-143.032 16.6398 45.9491)" id="svg_14" d="m16.639799,36.6366c-5.143099,0 -9.312429,4.169201 -9.312429,9.3125c0,5.142799 4.16933,9.3125 9.312429,9.3125c5.143101,0 9.312401,-4.169701 9.312401,-9.3125c0,-5.143299 -4.1693,-9.3125 -9.312401,-9.3125zm-1.496099,15.543701l-2.2658,-2.267803l3.9642,-3.963997l-3.9642,-3.963902l2.2658,-2.265598l6.230501,6.2295l-6.230501,6.2318z" fill-opacity="null" stroke-opacity="null" fill="#ffffff"/>
        </g>
-      
+
     </g>
     <g id="bullet">
-      <circle cx="5" cy="5" r="5" style="fill:red"/>
-      <circle cx="6" cy="3" r="1" style="fill:pink"/>
+      <circle cx="5" cy="5" r="5" style="fill:black"/>
+      <circle cx="6" cy="3" r="1" style="fill:grey"/>
     </g>
   </defs>
 
-  <rect width="100%" height="100%" style="fill:url(#background_pattern);stroke:orange;stroke-width:4" />
+  <rect width="100%" height="100%" style="fill:url(#background_pattern);stroke:black;stroke-width:4" />
 
-  <rect x="20" y="20" width="600" height="560" style="fill:black;stroke:red;stroke-width:5" />
+  <rect x="20" y="20" width="600" height="560" style="fill:black;stroke:black;stroke-width:5" />
 
   <g onclick="top.setZoom()" transform="translate(640, 20)">
-    <rect x="0" y="0" width="140" height="40" style="fill:white;stroke:red;stroke-width:2" />
+    <rect x="0" y="0" width="140" height="40" style="fill:white;stroke:black;stroke-width:2" />
     <text x="70" y="28" style="fill:red;font-size:25px;text-anchor:middle">Zoom</text>
   </g>
   
 <g transform="translate(640, 120)">
   <text x="70" y="0"
-   style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
+   style="fill:black;font-size:25px;font-weight:bold;text-anchor:middle">
     Score:
   </text>
   <rect x="0" y="10" width="140" height="35" style="fill:white" />
   <text id="score" x="70" y="36"
-   style="fill:orange;font-size:25px;text-anchor:middle">0</text>
+   style="fill:black;font-size:25px;text-anchor:middle">0</text>
 </g>
 
 
@@ -86,112 +88,39 @@
       <g id="gamearea" transform="translate(0,0)" width="600" height="560">
         <rect x="0" y="0" width="600" height="560" style="fill:white" />
 
-        <g id="platforms">
-            <!-- 60 -->
-            <rect style="fill:orange" width="60" height="20" x="0" y="60"/>
-
-            <!-- 80 -->
-            <rect style="fill:orange" width="20" height="20" x="40" y="80"/>
-
-            <!-- 100 -->
-            <rect style="fill:orange" width="480" height="20" x="40" y="100"/>
-
-            <!-- 120 -->
-            <rect style="fill:orange" width="20" height="20" x="60" y="120"/>
-            <rect style="fill:orange" width="40" height="20" x="220" y="120"/>
-
-            <!-- 140 -->
-            <rect style="fill:orange" width="40" height="20" x="220" y="140"/>
-            <rect style="fill:orange" width="40" height="20" x="560" y="140"/>
-
-            <!-- 160 -->
-            <rect style="fill:orange" width="120" height="20" x="180" y="160"/>
-            <rect style="fill:orange" width="60" height="20" x="540" y="160"/>
-
-            <!-- 180 -->
-            <rect style="fill:orange" width="20" height="20" x="0" y="180"/>
-            <rect style="fill:orange" width="20" height="20" x="100" y="180"/>
-            <rect style="fill:orange" width="20" height="20" x="380" y="180"/>
-            <rect style="fill:orange" width="80" height="20" x="520" y="180"/>
-
-            <!-- 200 -->
-            <rect style="fill:orange" width="20" height="20" x="0" y="200"/>
-            <rect style="fill:orange" width="40" height="20" x="80" y="200"/>
-            <rect style="fill:orange" width="80" height="20" x="360" y="200"/>
-
-            <!-- 220 -->
-            <rect style="fill:orange" width="160" height="20" x="0" y="220"/>
-            <rect style="fill:orange" width="140" height="20" x="320" y="220"/>
-
-            <!-- 240 -->
-            <rect style="fill:orange" width="20" height="20" x="240" y="240"/>
-            <rect style="fill:orange" width="160" height="20" x="340" y="240"/>
-
-            <!-- 260 -->
-            <rect style="fill:orange" width="60" height="20" x="220" y="260"/>
-
-            <!-- 280 -->
-            <rect style="fill:orange" width="100" height="20" x="200" y="280"/>
-            <rect style="fill:orange" width="40" height="20" x="560" y="280"/>
-
-            <!-- 300 -->
-            <rect style="fill:orange" width="100" height="20" x="120" y="300"/>
-            <rect style="fill:orange" width="40" height="20" x="280" y="300"/>
-            <rect style="fill:orange" width="100" height="20" x="500" y="300"/>
-
-            <!-- 320 -->
-            <rect style="fill:orange" width="40" height="20" x="0" y="320"/>
-            <rect style="fill:orange" width="60" height="20" x="280" y="320"/>
-            <rect style="fill:orange" width="20" height="20" x="380" y="320"/>
-
-            <!-- 340 -->
-            <rect style="fill:orange" width="60" height="20" x="0" y="340"/>
-            <rect style="fill:orange" width="20" height="20" x="320" y="340"/>
-            <rect style="fill:orange" width="60" height="20" x="380" y="340"/>
-
-            <!-- 360 -->
-            <rect style="fill:orange" width="120" height="20" x="0" y="360"/>
-            <rect style="fill:orange" width="20" height="20" x="320" y="360"/>
-            <rect style="fill:orange" width="120" height="20" x="380" y="360"/>
-
-            <!-- 380 -->
-            <rect style="fill:orange" width="100" height="20" x="0" y="380"/>
-            <rect style="fill:orange" width="20" height="20" x="220" y="380"/>
-            <rect style="fill:orange" width="20" height="20" x="580" y="380"/>
-
-            <!-- 400 -->
-            <rect style="fill:orange" width="80" height="20" x="180" y="400"/>
-            <rect style="fill:orange" width="40" height="20" x="560" y="400"/>
-
-            <!-- 420 -->
-            <rect style="fill:orange" width="200" height="20" x="160" y="420"/>
-            <rect style="fill:orange" width="60" height="20" x="540" y="420"/>
-
-            <!-- 440 -->
-            <rect style="fill:orange" width="100" height="20" x="140" y="440"/>
-            <rect style="fill:orange" width="20" height="20" x="440" y="440"/>
-            <rect style="fill:orange" width="60" height="20" x="500" y="440"/>
-
-            <!-- 460 -->
-            <rect style="fill:orange" width="60" height="20" x="120" y="460"/>
-            <rect style="fill:orange" width="60" height="20" x="400" y="460"/>
-
-            <!-- 480 -->
-            <rect style="fill:orange" width="40" height="20" x="0" y="480"/>
-            <rect style="fill:orange" width="60" height="20" x="380" y="480"/>
-
-            <!-- 500 -->
-            <rect style="fill:orange" width="60" height="20" x="0" y="500"/>
-            <rect style="fill:orange" width="20" height="20" x="260" y="500"/>
-
-            <!-- 520 -->
-            <rect style="fill:orange" width="80" height="20" x="0" y="520"/>
-            <rect style="fill:orange" width="20" height="20" x="140" y="520"/>
-            <rect style="fill:orange" width="80" height="20" x="240" y="520"/>
-            <rect style="fill:orange" width="20" height="20" x="500" y="520"/>
-
+        <g id="platforms" style="stroke:black">
             <!-- the floor -->
-            <rect style="fill:orange" width="600" height="20" x="0" y="540"/>
+            <rect style="fill:blue" width="600" height="20" x="0" y="540"/>
+  
+            <!-- 1st 440  --> 
+            <rect style="fill:blue " width="80" height="20" x="80" y="440"/>
+
+            <!-- 2nd 400 --> 
+            <rect style="fill:blue " width="80" height="20" x="280" y="400"/>
+            
+            <!-- 3st 360 --> 
+            <rect style="fill:blue " width="120" height="20" x="480" y="360"/>
+            
+            <!-- 3st 320 --> 
+            <rect style="fill:blue " width="60" height="20" x="0" y="320"/>
+            
+            <!-- 240 -->
+            <rect style="fill:blue " width="80" height="20" x="520" y="240"/>
+            
+            <!-- 220 -->
+            <rect style="fill:blue " width="160" height="20" x="0" y="220"/> 
+            <rect style="fill:blue " width="60" height="20" x="540" y="220"/>         
+            <!-- 200 -->
+            <rect style="fill:blue " width="80" height="20" x="280" y="200"/>
+            <rect style="fill:blue " width="40" height="20" x="560" y="200"/>
+
+            <!-- 120 -->            
+            <rect style="fill:blue " width="160" height="20" x="120" y="120"/>
+
+            <!-- 100 -->            
+            <rect style="fill:blue " width="80" height="20" x="420" y="100"/>
+            <rect style="fill:blue " width="60" height="20" x="0" y="100"/>
+            
         </g>
 
         <g id="monsters"/>
