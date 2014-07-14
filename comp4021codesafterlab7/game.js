@@ -230,6 +230,7 @@ var bullets_left = 8;                       // store numbers of bullets left to 
 var bullets_directions = [];                // store bullets directions   
 
 var monster_count;
+var monster_max_amount;
 var monsters_destination = [];
 var monster_speed;
 
@@ -259,8 +260,16 @@ function load(evt) {
     initGameVar();
 
     // Create the monsters
-    createMonster(200, 15);
-    createMonster(500, 500);
+    for (var i = 0; i < monster_max_amount; i++) {
+        var pt = randomPoint( SCREEN_SIZE.w - MONSTER_SIZE.w, 
+        SCREEN_SIZE.h - MONSTER_SIZE.h);
+        if( pt.x < PLAYER_INIT_POS.x + 100 ||
+            pt.y > PLAYER_INIT_POS.y -100 ) {
+            i--;
+            continue;
+        }
+        createMonster(pt);
+   }
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
@@ -297,7 +306,8 @@ function initGameVar(){
     cheat_mode = false;
 
     monster_count=0;
-    monster_speed=1;
+    monster_max_amount = 6;
+    monster_speed=0.5;
     monsters_destination = [];
 }
 
@@ -321,11 +331,11 @@ function cleanUpGroup(id, textOnly) {
 //
 // This function creates the monsters in the game
 //
-function createMonster(x, y) {
+function createMonster(point) {
     var monster = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
     var id = "mosnter" + monster_count;
-    monster.setAttribute("x", x);
-    monster.setAttribute("y", y);
+    monster.setAttribute("x", point.x);
+    monster.setAttribute("y", point.y);
     monster.setAttribute("id", id);
     monster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#monster");
     svgdoc.getElementById("monsters").appendChild(monster);
@@ -466,7 +476,7 @@ function collisionDetection() {
                 bullets.removeChild(bullet);
                 i--;
 
-                score += 10 * (zoom_mode *2) ;      // bonus points for zoom mode
+                score += 10 + (zoom_mode *20) ;      // bonus points for zoom mode
                 svgdoc.getElementById("score").firstChild.data = score;
             }
         }
@@ -579,14 +589,17 @@ function moveMonsters() {
             node.setAttribute("x", x - monster_speed);
         } else  if (monsters_destination[id].x > x) { 
             node.setAttribute("x", x + monster_speed);
-        }
+        } 
         
         if (monsters_destination[id].y < y) {
             node.setAttribute("y", y - monster_speed);
         } else if (monsters_destination[id].y > y){ 
             node.setAttribute("y", y + monster_speed);
-        }
-        
+        } 
+
+        if ((monsters_destination[id].y == y) && (monsters_destination[id].x == x))
+         monsters_destination[id] = randomPoint( SCREEN_SIZE.w - MONSTER_SIZE.w, 
+        SCREEN_SIZE.h - MONSTER_SIZE.h);
     }    
 
 }
