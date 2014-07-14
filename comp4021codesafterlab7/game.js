@@ -60,7 +60,8 @@ Player.prototype.isOnMovingPlatform = function() {
          ((this.position.x + PLAYER_SIZE.w) == x && this.motion == motionType.RIGHT) ||
          (this.position.x == (x + w) && this.motion == motionType.LEFT)) &&
             ((this.position.y + PLAYER_SIZE.h == y + VERTICAL_DISPLACEMENT) ||
-            (this.position.y + PLAYER_SIZE.h == y - VERTICAL_DISPLACEMENT)) ) return true; 
+            (this.position.y + PLAYER_SIZE.h == y - VERTICAL_DISPLACEMENT) ||
+            (this.position.y + PLAYER_SIZE.h == y )) ) return true; 
             // check platform future Y position 
 }
 
@@ -376,16 +377,24 @@ function moveBullets() {
 }
 
 // This function update tht position of the moving platform
-function movePlatform() {
+function movePlatform(position) {
     var platform = svgdoc.getElementById("moving_platform");
     var y = parseInt(platform.getAttribute("y"));
     
     if(movingPlatformDirection=="UP"){
         // move up 
         platform.setAttribute("y",y - VERTICAL_DISPLACEMENT);
+        //move player if ontop
+        if(player.isOnMovingPlatform()){
+            position.y -= VERTICAL_DISPLACEMENT;
+        }
     } else if (movingPlatformDirection == "DOWN") {
         // move down
         platform.setAttribute("y",y + VERTICAL_DISPLACEMENT);
+        //move player if ontop
+        if(player.isOnMovingPlatform()){
+            position.y += VERTICAL_DISPLACEMENT;
+        }
     }
 
     if ( y < MOVING_PLATFORM_TOP) {
@@ -448,7 +457,7 @@ function gamePlay() {
     // Move the bullets
     moveBullets();
 
-    movePlatform();
+    movePlatform(player.position);
 
     updateScreen();
 }
