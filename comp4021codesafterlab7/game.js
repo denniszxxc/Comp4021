@@ -221,11 +221,15 @@ Player.prototype.collideExit = function(position) {
     var size = new Size(w, h);
 
     if (intersect(position, PLAYER_SIZE, pos, size)) {
-        score += 50 + (zoom_mode *50);      // bonus points for zoom mode
+        score += level_num *100 + (zoom_mode *100);      // bonus points for zoom mode
         //update score
+        score += time_left + (zoom_mode *time_left); 
+
         svgdoc.getElementById("score").firstChild.data = score;
-        stars.removeChild(node); 
-        //startNextLevel();
+        level_num ++;
+        svgdoc.getElementById("level").firstChild.data = level_num;
+
+        startNextLevel(position);
    }
 }
 
@@ -279,6 +283,8 @@ var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              
 
+var level_num = 1;
+
 var bullets_left = 8;                       // store numbers of bullets left to shoot
 var bullets_directions = [];                // store bullets directions   
 
@@ -294,11 +300,15 @@ var cheat_mode = false;
 
 var game_timer;
 var time_left;
+var start = false;
 
 //
 // The load function for the SVG document
 //
 function load(evt) {
+
+
+
     // Set the root node to the global variable
     svgdoc = evt.target.ownerDocument;
 
@@ -306,13 +316,24 @@ function load(evt) {
     svgdoc.documentElement.addEventListener("keydown", keydown, false);
     svgdoc.documentElement.addEventListener("keyup", keyup, false);
 
+    svgdoc.getElementById("startScreen").setAttribute("style","visibility:hidden");
+
     // Remove text nodes in the 'platforms' group
     cleanUpGroup("platforms", true);
 
     // Create the player
     player = new Player();
 
+
+
     initGameVar();
+
+    // get player name
+    player_name =  prompt("What is your name?", "")
+    if(player_name == "") {
+        player_name = "Anonymous";
+    }
+    svgdoc.getElementById("player_name").firstChild.data = player_name;
 
     // Create the monsters
     createMonsters();
@@ -325,6 +346,46 @@ function load(evt) {
 
     //start game timer
     game_timer = setInterval("updatetime()", 1000);
+}
+
+function startNextLevel(position) {
+    zoom = 1;
+    updateScreen();
+    // new level
+    clearInterval(gameInterval);
+    clearInterval(game_timer);
+    cleanUpGroup("platforms", true);
+
+    player.position = PLAYER_INIT_POS;
+    position.x = PLAYER_INIT_POS.x;
+    position.y = PLAYER_INIT_POS.y;
+    
+    level_num ++;
+   
+    time_left = TIME_LIMIT;
+    bullets_left = 8;
+    bullets_directions = [];
+    
+    zoom_mode = false;
+    cheat_mode = false;
+
+    clearMonsters();
+    monster_count=0;
+    monster_max_amount++;
+    monsters_destination = [];
+    monster_speed +=0.5;
+
+    // Create the monsters
+    createMonsters();
+
+    // create stars
+    createStars();
+
+    // Start the game interval
+    gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
+    //start game timer
+    game_timer = setInterval("updatetime()", 1000);
+
 }
 
 
@@ -373,6 +434,14 @@ function cleanUpGroup(id, textOnly) {
         if (!textOnly || node.nodeType == 3) // A text node
             group.removeChild(node);
         node = next;
+    }
+}
+
+
+function clearMonsters() {
+    var monsters = svgdoc.getElementById("monsters");
+    for (var i = 0; i < monsters.length; i++) {
+        monsters.removeChild(monsters[i]);
     }
 }
 
@@ -591,7 +660,7 @@ function collisionDetection() {
                 bullets.removeChild(bullet);
                 i--;
 
-                score += 10 + (zoom_mode *20) ;      // bonus points for zoom mode
+                score += 10 + (zoom_mode *30) ;      // bonus points for zoom mode
                 svgdoc.getElementById("score").firstChild.data = score;
             }
         }
@@ -610,7 +679,7 @@ function gameEnd() {
 
     table = getHighScoreTable();
 
-    var name = prompt("What is your name?", ""); //change
+    var name = player_name; //change
     var record = new ScoreRecord(name, score);
 
     var pos = table.length;
