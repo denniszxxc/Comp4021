@@ -175,9 +175,60 @@ Player.prototype.collidePortal = function(position) {
        position.x = x1 + w +1;
        position.y = y1 + h - PLAYER_SIZE.h;
     }
-
-
 }
+
+Player.prototype.collideStar = function(position) {
+    var stars = svgdoc.getElementById("stars");
+    for (var i = 0; i < stars.childNodes.length; i++) {
+        var node = stars.childNodes.item(i);
+        var x = parseFloat(node.getAttribute("x"));
+        var y = parseFloat(node.getAttribute("y"));
+        var w = 20;
+        var h = 20;
+        var pos = new Point(x, y);
+        var size = new Size(w, h);
+
+        if (intersect(position, PLAYER_SIZE, pos, size)) {
+            score += 10 + (zoom_mode *20);      // bonus points for zoom mode
+            svgdoc.getElementById("score").firstChild.data = score;
+
+            stars.removeChild(node); 
+       }
+    }
+    if (stars.childNodes.length == 0 ){
+        //<use id="portal0" x = "560" y = "460" xlink:href = "#exit"/>
+        var exit = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+        exit.setAttribute("x", 560);
+        exit.setAttribute("y", 460);
+        exit.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#exit");
+        svgdoc.getElementById("exits").appendChild(exit);
+
+    }
+}
+
+Player.prototype.collideExit = function(position) {
+    var exits = svgdoc.getElementById("exits");
+    if (exits.childNodes.length==0) {
+        return;
+    }
+
+    var node = exits.firstChild;
+    var x = 560;
+    var y = 460;
+    var w = 40;
+    var h = 80;
+    var pos = new Point(x, y);
+    var size = new Size(w, h);
+
+    if (intersect(position, PLAYER_SIZE, pos, size)) {
+        score += 50 + (zoom_mode *50);      // bonus points for zoom mode
+        //update score
+        svgdoc.getElementById("score").firstChild.data = score;
+        stars.removeChild(node); 
+        //startNextLevel();
+   }
+}
+
 
 
 //
@@ -201,6 +252,7 @@ var PORTAL_INTERVAL = 500.0;                 // The period when portal is disabl
 
 var MONSTER_SIZE = new Size(40, 60);        
 
+var STAR_SIZE = new Size(40,40);
 
 var MOVING_PLATFORM_TOP = 460;              // Y axis moving range of the moving platform
 var MOVING_PLATFORM_DOWN = 520;
@@ -217,6 +269,7 @@ var portal_active = true;
 //
 // Variables in the game
 //
+var player_name = "Anonymous";
 var motionType = {NONE:0, LEFT:1, RIGHT:2}; // Motion enum
 var movingPlatformDirection = "UP";         // save the movement direction of the moving platform
 
@@ -233,6 +286,8 @@ var monster_count;
 var monster_max_amount;
 var monsters_destination = [];
 var monster_speed;
+
+var star_max_amount = 6;
 
 var zoom_mode = false;
 var cheat_mode = false;
@@ -260,16 +315,10 @@ function load(evt) {
     initGameVar();
 
     // Create the monsters
-    for (var i = 0; i < monster_max_amount; i++) {
-        var pt = randomPoint( SCREEN_SIZE.w - MONSTER_SIZE.w, 
-        SCREEN_SIZE.h - MONSTER_SIZE.h);
-        if( pt.x < PLAYER_INIT_POS.x + 100 ||
-            pt.y > PLAYER_INIT_POS.y -100 ) {
-            i--;
-            continue;
-        }
-        createMonster(pt);
-   }
+    createMonsters();
+
+    // create stars
+    createStars();
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
@@ -328,10 +377,24 @@ function cleanUpGroup(id, textOnly) {
 }
 
 
+function createMonsters(){
+    for (var i = 0; i < monster_max_amount; i++) {
+        var pt = randomPoint( SCREEN_SIZE.w - MONSTER_SIZE.w, 
+        SCREEN_SIZE.h - MONSTER_SIZE.h);
+        if( pt.x < PLAYER_INIT_POS.x + 100 ||
+            pt.y > PLAYER_INIT_POS.y -100 ) {
+            i--;
+            continue;
+        }
+        createOneMonster(pt);
+   }
+}
+
+
 //
 // This function creates the monsters in the game
 //
-function createMonster(point) {
+function createOneMonster(point) {
     var monster = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
     var id = "mosnter" + monster_count;
     monster.setAttribute("x", point.x);
@@ -346,6 +409,58 @@ function createMonster(point) {
     monster_count++;
 }
 
+
+function createStars() {
+    for (var i=0; i < star_max_amount; i++){
+        var point = randomPoint(SCREEN_SIZE.w - STAR_SIZE.w, 
+        SCREEN_SIZE.h - STAR_SIZE.h);
+        
+        if(starCollidePlatform(point)) {
+            i--;
+            continue;
+        }
+
+        var star = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+        star.setAttribute("x", point.x);
+        star.setAttribute("y", point.y);
+        star.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#star");
+        svgdoc.getElementById("stars").appendChild(star);
+    }
+    
+}
+
+
+function starCollidePlatform(position) {
+    var platforms = svgdoc.getElementById("platforms");
+    for (var i = 0; i < platforms.childNodes.length; i++) {
+        var node = platforms.childNodes.item(i);
+        if (node.nodeName != "rect") continue;
+        if (node.getAttribute("id") == "moving_platform") continue;
+
+        var x = parseFloat(node.getAttribute("x"));
+        var y = parseFloat(node.getAttribute("y"));
+        var w = parseFloat(node.getAttribute("width"));
+        var h = parseFloat(node.getAttribute("height"));
+        var pos = new Point(x, y);
+        var size = new Size(w, h);
+
+        if (intersect(position, STAR_SIZE, pos, size)) {
+            return true;
+        }
+    }
+    var node = svgdoc.getElementById("moving_platform");
+
+    var x = parseFloat(node.getAttribute("x"));
+    var y = parseFloat(node.getAttribute("y"));
+    var w = parseFloat(node.getAttribute("width"));
+    var h = parseFloat(node.getAttribute("height"));
+    var pos = new Point(x, y);
+    var size = new Size(w, h);
+
+    if (intersect(position, PLAYER_SIZE, pos, size)) {
+        return true;
+    }
+}
 
 //
 // This function shoots a bullet from the player
@@ -589,6 +704,8 @@ function moveMonsters() {
             node.setAttribute("x", x - monster_speed);
         } else  if (monsters_destination[id].x > x) { 
             node.setAttribute("x", x + monster_speed);
+            // node.setAttribute("transform", "translate(" + MONSTER_SIZE.w + ", 0) scale(-1, 1)");        
+
         } 
         
         if (monsters_destination[id].y < y) {
@@ -652,6 +769,8 @@ function gamePlay() {
 
     // Check collision with portal
     player.collidePortal(position);
+    player.collideStar(position);
+    player.collideExit(position);
 
 
     // Set the location back to the player object (before update the screen)
@@ -679,8 +798,12 @@ function updateScreen() {
         player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")" + "translate("  +PLAYER_SIZE.w + ", 0) scale(-1, 1)");        
     } else {
         player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
-
     }
+
+    //update name position
+    var name_tag = svgdoc.getElementById("player_name");
+    name_tag.setAttribute("x", player.position.x);
+    name_tag.setAttribute("y", player.position.y);
 
     // Calculate the scaling and translation factors
     var scale = new Point(zoom, zoom);
