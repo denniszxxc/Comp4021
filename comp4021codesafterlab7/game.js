@@ -4,6 +4,13 @@ function Point(x, y) {
     this.y = (y)? parseFloat(y) : 0.0;
 }
 
+function randomPoint(x, y) {
+    var point = new Point()
+    point.x = Math.floor(Math.random()* x );
+    point.y = Math.floor(Math.random()* y );
+    return point; 
+}
+
 function Size(w, h) {
     this.w = (w)? parseFloat(w) : 0.0;
     this.h = (h)? parseFloat(h) : 0.0;
@@ -192,7 +199,8 @@ var BULLET_SPEED = 10.0;                    // The speed of a bullet
 var SHOOT_INTERVAL = 200.0;                 // The period when shooting is disabled
 var PORTAL_INTERVAL = 500.0;                 // The period when portal is disabled
 
-var MONSTER_SIZE = new Size(40, 60);        // The speed of a bullet
+var MONSTER_SIZE = new Size(40, 60);        
+
 
 var MOVING_PLATFORM_TOP = 460;              // Y axis moving range of the moving platform
 var MOVING_PLATFORM_DOWN = 520;
@@ -220,6 +228,10 @@ var score = 0;
 
 var bullets_left = 8;                       // store numbers of bullets left to shoot
 var bullets_directions = [];                // store bullets directions   
+
+var monster_count;
+var monsters_destination = [];
+var monster_speed;
 
 var zoom_mode = false;
 var cheat_mode = false;
@@ -277,11 +289,16 @@ function updatetime() {
 function initGameVar(){
     time_left = TIME_LIMIT;
     score = 0;
+
     bullets_left = 8;
     bullets_directions = [];
+    
     zoom_mode = false;
     cheat_mode = false;
 
+    monster_count=0;
+    monster_speed=1;
+    monsters_destination = [];
 }
 
 
@@ -306,10 +323,17 @@ function cleanUpGroup(id, textOnly) {
 //
 function createMonster(x, y) {
     var monster = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+    var id = "mosnter" + monster_count;
     monster.setAttribute("x", x);
     monster.setAttribute("y", y);
+    monster.setAttribute("id", id);
     monster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#monster");
     svgdoc.getElementById("monsters").appendChild(monster);
+
+    // set destination
+    monsters_destination[id] = randomPoint( SCREEN_SIZE.w - MONSTER_SIZE.w, 
+        SCREEN_SIZE.h - MONSTER_SIZE.h);
+    monster_count++;
 }
 
 
@@ -540,6 +564,35 @@ function movePlatform(position) {
 
 }
 
+function moveMonsters() {
+    // Go through all monster
+    var monster = svgdoc.getElementById("monsters");
+    for (var i = 0; i < monster.childNodes.length; i++) {
+        var node = monster.childNodes.item(i);
+
+        // Update the position of the bullet
+        var x = parseFloat(node.getAttribute("x"));
+        var y = parseFloat(node.getAttribute("y"));
+        var id = node.getAttribute("id");
+
+        if (monsters_destination[id].x < x) {
+            node.setAttribute("x", x - monster_speed);
+        } else  if (monsters_destination[id].x > x) { 
+            node.setAttribute("x", x + monster_speed);
+        }
+        
+        if (monsters_destination[id].y < y) {
+            node.setAttribute("y", y - monster_speed);
+        } else if (monsters_destination[id].y > y){ 
+            node.setAttribute("y", y + monster_speed);
+        }
+        
+    }    
+
+}
+
+
+
 
 //
 // This function updates the position and motion of the player in the system
@@ -593,6 +646,8 @@ function gamePlay() {
 
     // Move the bullets
     moveBullets();
+
+    moveMonsters();
 
     movePlatform(player.position);
 
