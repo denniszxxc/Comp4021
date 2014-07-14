@@ -41,10 +41,27 @@ Player.prototype.isOnPlatform = function() {
              (this.position.x == (x + w) && this.motion == motionType.LEFT)) &&
             this.position.y + PLAYER_SIZE.h == y) return true;
     }
-    // check moving platform
+
     if (this.position.y + PLAYER_SIZE.h == SCREEN_SIZE.h) return true;
 
     return false;
+}
+
+Player.prototype.isOnMovingPlatform = function() {
+     // check moving platform
+    var node = svgdoc.getElementById("moving_platform");
+
+    var x = parseFloat(node.getAttribute("x"));
+    var y = parseFloat(node.getAttribute("y"));
+    var w = parseFloat(node.getAttribute("width"));
+    var h = parseFloat(node.getAttribute("height"));
+
+    if (((this.position.x + PLAYER_SIZE.w > x && this.position.x < x + w) ||
+         ((this.position.x + PLAYER_SIZE.w) == x && this.motion == motionType.RIGHT) ||
+         (this.position.x == (x + w) && this.motion == motionType.LEFT)) &&
+            ((this.position.y + PLAYER_SIZE.h == y + VERTICAL_DISPLACEMENT) ||
+            (this.position.y + PLAYER_SIZE.h == y - VERTICAL_DISPLACEMENT)) ) return true; 
+            // check platform future Y position 
 }
 
 Player.prototype.collidePlatform = function(position) {
@@ -85,7 +102,11 @@ Player.prototype.collideMovePlatform = function(position) {
     var size = new Size(w, h);
 
     if (intersect(position, PLAYER_SIZE, pos, size)) {
-        position.y -= VERTICAL_DISPLACEMENT;
+        if(movingPlatformDirection == "UP"){
+            position.y -= VERTICAL_DISPLACEMENT;
+        } else {
+            position.y += VERTICAL_DISPLACEMENT;
+        }
         if (intersect(position, PLAYER_SIZE, pos, size)) {
             position.x = this.position.x;
         }
@@ -96,7 +117,7 @@ Player.prototype.collideMovePlatform = function(position) {
                 position.y = y - PLAYER_SIZE.h;
             this.verticalSpeed = 0;
         }
-    }
+    } 
 
 }
 
@@ -242,7 +263,7 @@ function keydown(evt) {
             break;
 
         case "W".charCodeAt(0):
-            if (player.isOnPlatform()) {
+            if (player.isOnPlatform() || player.isOnMovingPlatform()) {
                 player.verticalSpeed = JUMP_SPEED;
             }
             break;
