@@ -173,7 +173,9 @@ var player = null;                          // The player object
 var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              
-var bullets_left = 8;                        // store numbers of bullets left to shoot
+var bullets_left = 8;                       // store numbers of bullets left to shoot
+var bullets_directions = [];                // store bullets directions   
+
 
 //
 // The load function for the SVG document
@@ -194,7 +196,7 @@ function load(evt) {
 
     // Create the monsters
     createMonster(200, 15);
-    //createMonster(400, 270);
+    createMonster(500, 500);
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
@@ -246,8 +248,13 @@ function shootBullet() {
     var bullet = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
     bullet.setAttribute("x", player.position.x + PLAYER_SIZE.w / 2 - BULLET_SIZE.w / 2);
     bullet.setAttribute("y", player.position.y + PLAYER_SIZE.h / 2 - BULLET_SIZE.h / 2);
+    bullet.setAttribute("id", "bullet"+ (bullets_left-8));
+
     bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#bullet");
     svgdoc.getElementById("bullets").appendChild(bullet);
+
+    // store moving direction
+    bullets_directions["bullet"+ (bullets_left-8)] = player.face_direction;
 
     //update bullets left
     bullets_left -=1;
@@ -376,11 +383,20 @@ function moveBullets() {
 
         // Update the position of the bullet
         var x = parseInt(node.getAttribute("x"));
-        node.setAttribute("x", x + BULLET_SPEED);
+        var id = node.getAttribute("id");
+        if (bullets_directions[id] == "RIGHT") {
+            node.setAttribute("x", x + BULLET_SPEED);
+        } else if (bullets_directions[id] == "LEFT"){
+            node.setAttribute("x", x - BULLET_SPEED);
+        }
 
         // If the bullet is not inside the screen delete it from the group
-        if (x > SCREEN_SIZE.w) {
+        if (x > SCREEN_SIZE.w || x < 0 ) {
             bullets.removeChild(node);
+            delete bullets_directions[i];
+            for(var k = i; k < bullets_directions.length; k++){
+                bullets_directions[k] = bullets_directions[k + 1]; 
+            }
             i--;
         }
     }
