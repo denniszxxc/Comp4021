@@ -46,13 +46,25 @@ Player.prototype.isOnPlatform = function() {
         if (((this.position.x + PLAYER_SIZE.w > x && this.position.x < x + w) ||
              ((this.position.x + PLAYER_SIZE.w) == x && this.motion == motionType.RIGHT) ||
              (this.position.x == (x + w) && this.motion == motionType.LEFT)) &&
-            this.position.y + PLAYER_SIZE.h == y) return true;
-    }
+            this.position.y + PLAYER_SIZE.h == y) 
+            {
+                if ((node.getAttribute("id") != null) &&
+                   ( (node.getAttribute("id") == "dp0") ||
+                     (node.getAttribute("id") == "dp1" ) ||
+                       (node.getAttribute("id") == "dp2") )){
+                setTimeInterval("platforms.removeChild(node)", 3000);
+            }
+
+                return true;
+                }    
+            }
 
     if (this.position.y + PLAYER_SIZE.h == SCREEN_SIZE.h) return true;
 
     return false;
 }
+
+
 
 Player.prototype.isOnMovingPlatform = function() {
      // check moving platform
@@ -191,6 +203,7 @@ Player.prototype.collideStar = function(position) {
         if (intersect(position, PLAYER_SIZE, pos, size)) {
             score += 10 + (zoom_mode *20);      // bonus points for zoom mode
             svgdoc.getElementById("score").firstChild.data = score;
+            document.getElementById("coin").play();
 
             stars.removeChild(node); 
        }
@@ -228,7 +241,7 @@ Player.prototype.collideExit = function(position) {
         svgdoc.getElementById("score").firstChild.data = score;
         level_num ++;
         svgdoc.getElementById("level").firstChild.data = level_num;
-
+        document.getElementById("exm").play();
         startNextLevel(position);
    }
 }
@@ -302,11 +315,11 @@ var game_timer;
 var time_left;
 var start = false;
 
+document.getElementById("bgg").play();
 //
 // The load function for the SVG document
 //
 function load(evt) {
-
 
 
     // Set the root node to the global variable
@@ -560,6 +573,11 @@ function shootBullet() {
     bullets_left -=1;
     svgdoc.getElementById("bullets_left").firstChild.data = bullets_left;
 
+    document.getElementById("shoot").pause();
+    document.getElementById("shoot").currentTime = 0;
+    document.getElementById("shoot").play();
+
+
 }
 
 
@@ -639,6 +657,7 @@ function collisionDetection() {
         // player die
         if (!cheat_mode && intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
             gameEnd();
+            document.getElementById("playdie").play();
         }
     }
 
@@ -662,6 +681,8 @@ function collisionDetection() {
 
                 score += 10 + (zoom_mode *30) ;      // bonus points for zoom mode
                 svgdoc.getElementById("score").firstChild.data = score;
+
+                document.getElementById("die").play();
             }
         }
     }

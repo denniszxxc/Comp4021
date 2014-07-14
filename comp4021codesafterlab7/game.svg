@@ -79,10 +79,7 @@
 
   <rect x="20" y="20" width="600" height="560" style="fill:black;stroke:black;stroke-width:5" />
 
-  <g onclick="top.setZoom()" transform="translate(640, 20)">
-    <rect x="0" y="0" width="140" height="40" style="fill:white;stroke:black;stroke-width:2" />
-    <text x="70" y="28" style="fill:red;font-size:25px;text-anchor:middle">Zoom</text>
-  </g>
+  
   
 <g transform="translate(640, 120)">
   <text x="70" y="0"
@@ -159,11 +156,13 @@
             <rect style="fill:blue" width="40" height="20" x="560" y="200"/>
 
             <!-- 120 -->            
-            <rect style="fill:blue" width="160" height="20" x="120" y="120"/>
+            <rect id="dp0" style="fill:green" width="80" height="20" x="120" y="120"/>
+            <rect id="dp1" style="fill:green" width="80" height="20" x="220" y="120"/>
+
 
             <!-- 100 -->            
             <rect style="fill:blue" width="80" height="20" x="420" y="100"/>
-            <rect style="fill:blue" width="60" height="20" x="0" y="100"/>
+            <rect id="dp3" style="fill:green" width="60" height="20" x="0" y="100"/>
             
         </g>
         <g id="moving_platforms">
@@ -205,11 +204,30 @@
   <g id="startScreen" transform="translate(00)" >
     <rect width="600" height="560"
      style="fill:#5F9EA0;stroke:#006400;stroke-width:4"/>
-    <text x="260" y="40"
-     style="fill:red;font-size:30px;font-weight:bold;text-anchor:middle">
+    
+    <text x="260" y="80"
+     style="fill:red;font-size:40px;font-weight:bold;text-anchor:middle">
+     CHESS PLATFORMER 2.0!
       </text>
-     <rect width="160" height="80" x="240" y="400" style="fill:#CDCDB4" onclick="top.load(evt)"/>
+    <text id="highscoretext" x="260" y="200"
+     style="font-size: 20px;font-weight:bold;text-anchor:left">
+     <tspan x="40" dy="1.2em">Collect all stars       </tspan>
+     <tspan x="40" dy="1.2em">Then save your Queen! </tspan>
+     <tspan x="40" dy="1.2em">Shoot monsters using Spacebar</tspan>
+     <tspan x="40" dy="1.2em">Use WASD to move </tspan>
+     <tspan x="40" dy="1.2em">  </tspan>
+     <tspan x="380" dy="1.2em">Li Ho Yeung (5893) </tspan>
+   </text>
+   <g onclick="top.load(evt)" transform="translate(400, 400)">
+     <rect width="140" height="40" x="0" y="0" style="fill:#CDCDB4;stroke:black;" />
+     <text width="160" height="80" x="70" y="28" style="fill:red;font-size:25px;text-anchor:middle"> START  </text>
+    </g>
+    <g onclick="top.setZoom(); top.load(evt);"  transform="translate(100, 400)">
+    <rect x="0" y="0" width="140" height="40" style="fill:white;stroke:black;stroke-width:2" />
+    <text x="70" y="28" style="fill:red;font-size:25px;text-anchor:middle">Zoom</text>
+    </g>
   </g>
+    
 
       </g>
     </g>
