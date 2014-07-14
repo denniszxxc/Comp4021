@@ -137,6 +137,41 @@ Player.prototype.collideScreen = function(position) {
     }
 }
 
+Player.prototype.collidePortal = function(position) {
+
+    
+    var portal1 = svgdoc.getElementById("portal0");
+    
+    var x1 =  parseFloat(portal1.getAttribute("x"));
+    var y1 =  parseFloat(portal1.getAttribute("y"));
+    var w = 20;
+    var h = 40;
+    var pos1 = new Point(x1, y1);
+    var size = new Size(w, h);
+
+    var portal2 = svgdoc.getElementById("portal1");
+    var x2 =  parseFloat(portal2.getAttribute("x"));
+    var y2 =  parseFloat(portal2.getAttribute("y"));
+    var pos2 = new Point(x2, y2);
+
+
+    if (portal_active && intersect(position, PLAYER_SIZE, pos1, size)) {
+        portal_active = false
+        setTimeout("portal_active = true", PORTAL_INTERVAL);
+       position.x = x2 + w +1 ; 
+       position.y = y2 + h - PLAYER_SIZE.h;
+    }
+    if (portal_active && intersect(position, PLAYER_SIZE, pos2, size)) {
+        portal_active = false
+        setTimeout("portal_active = true", PORTAL_INTERVAL);
+       position.x = x2 + w +1 ; 
+       position.x = x1 + w +1;
+       position.y = y1 + h - PLAYER_SIZE.h;
+    }
+
+
+}
+
 
 //
 // Below are constants used in the game
@@ -155,12 +190,21 @@ var BULLET_SIZE = new Size(10, 10);         // The speed of a bullet
 var BULLET_SPEED = 10.0;                    // The speed of a bullet
                                             //  = pixels it moves each game loop
 var SHOOT_INTERVAL = 200.0;                 // The period when shooting is disabled
-var canShoot = true;                        // A flag indicating whether the player can shoot a bullet
+var PORTAL_INTERVAL = 500.0;                 // The period when portal is disabled
 
 var MONSTER_SIZE = new Size(40, 60);        // The speed of a bullet
 
 var MOVING_PLATFORM_TOP = 460;              // Y axis moving range of the moving platform
 var MOVING_PLATFORM_DOWN = 520;
+
+var TIME_LIMIT = 60;
+
+
+// flags 
+var canShoot = true;                        // A flag indicating whether the player can shoot a bullet
+var portal_active = true;
+
+
 
 //
 // Variables in the game
@@ -180,6 +224,9 @@ var bullets_directions = [];                // store bullets directions
 var zoom_mode = false;
 var cheat_mode = false;
 
+var game_timer;
+var time_left;
+
 //
 // The load function for the SVG document
 //
@@ -197,12 +244,44 @@ function load(evt) {
     // Create the player
     player = new Player();
 
+    initGameVar();
+
     // Create the monsters
     createMonster(200, 15);
     createMonster(500, 500);
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
+
+    //start game timer
+    game_timer = setInterval("updatetime()", 1000);
+}
+
+
+// called every one second, end game when no time left
+function updatetime() {
+    time_left --;
+    svgdoc.getElementById("time_left").firstChild.data = time_left + "sec";
+    if(time_left==0){
+        gameEnd();
+    }
+
+    // update the green bar's width( relate to time left)
+    var green_bar = svgdoc.getElementById("time_bar");
+    var bar_width = parseFloat(green_bar.getAttribute("width"));
+    green_bar.setAttribute("width", 140 * ( time_left / TIME_LIMIT)) ;
+
+}
+
+// initialize game variable when load
+function initGameVar(){
+    time_left = TIME_LIMIT;
+    score = 0;
+    bullets_left = 8;
+    bullets_directions = [];
+    zoom_mode = false;
+    cheat_mode = false;
+
 }
 
 
@@ -341,29 +420,7 @@ function collisionDetection() {
 
         // player die
         if (!cheat_mode && intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
-            // exit zoom mode
-            zoom = 1;
-            updateScreen();
-            // game end
-            clearInterval(gameInterval);
-
-            table = getHighScoreTable();
-
-            var name = prompt("What is your name?", ""); //change
-            var record = new ScoreRecord(name, score);
-
-            var pos = table.length;
-            for (var i = 0; i < table.length; i++) {
-				if (record.score > table[i].score) {
-					pos = i;
-					break;
-				}
-			}
-			table.splice(pos, 0, record);
-
-			setHighScoreTable(table);
-			showHighScoreTable(table);
-			return;
+            gameEnd();
         }
     }
 
@@ -390,6 +447,35 @@ function collisionDetection() {
             }
         }
     }
+}
+
+// This function end the game and displat the highscore table
+//
+function gameEnd() {
+// exit zoom mode
+    zoom = 1;
+    updateScreen();
+    // game end
+    clearInterval(gameInterval);
+    clearInterval(game_timer);
+
+    table = getHighScoreTable();
+
+    var name = prompt("What is your name?", ""); //change
+    var record = new ScoreRecord(name, score);
+
+    var pos = table.length;
+    for (var i = 0; i < table.length; i++) {
+        if (record.score > table[i].score) {
+            pos = i;
+            break;
+        }
+    }
+    table.splice(pos, 0, record);
+
+    setHighScoreTable(table);
+    showHighScoreTable(table);
+    return;
 }
 
 
@@ -497,6 +583,10 @@ function gamePlay() {
     player.collidePlatform(position);
     player.collideScreen(position);
     player.collideMovePlatform(position);
+
+    // Check collision with portal
+    player.collidePortal(position);
+
 
     // Set the location back to the player object (before update the screen)
     player.position = position;
