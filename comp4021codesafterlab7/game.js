@@ -173,9 +173,12 @@ var player = null;                          // The player object
 var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              
+
 var bullets_left = 8;                       // store numbers of bullets left to shoot
 var bullets_directions = [];                // store bullets directions   
 
+var zoom_mode = false;
+var cheat_mode = false;
 
 //
 // The load function for the SVG document
@@ -236,7 +239,7 @@ function createMonster(x, y) {
 //
 function shootBullet() {
     // disable shooting when no bullets left
-    if (bullets_left ==0 ){
+    if ( !cheat_mode && bullets_left <=0 ){
         return;
     }
 
@@ -285,6 +288,19 @@ function keydown(evt) {
                 player.verticalSpeed = JUMP_SPEED;
             }
             break;
+        case "C".charCodeAt(0):
+            cheat_mode = true;
+            svgdoc.getElementById("bullets_left").firstChild.data = "Cheat mode";
+            break;
+        case "V".charCodeAt(0):
+            cheat_mode = false;
+            if(bullets_left >= 0){
+                svgdoc.getElementById("bullets_left").firstChild.data = bullets_left;
+            } else {
+                svgdoc.getElementById("bullets_left").firstChild.data = 0;   
+
+            }
+            break;
 
         case 32:
             if (canShoot) shootBullet();
@@ -323,7 +339,12 @@ function collisionDetection() {
         var x = parseInt(monster.getAttribute("x"));
         var y = parseInt(monster.getAttribute("y"));
 
-        if (intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
+        // player die
+        if (!cheat_mode && intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
+            // exit zoom mode
+            zoom = 1;
+            updateScreen();
+            // game end
             clearInterval(gameInterval);
 
             table = getHighScoreTable();
@@ -364,7 +385,7 @@ function collisionDetection() {
                 bullets.removeChild(bullet);
                 i--;
 
-                score += 10;
+                score += 10 * (zoom_mode *2) ;      // bonus points for zoom mode
                 svgdoc.getElementById("score").firstChild.data = score;
             }
         }
@@ -529,4 +550,5 @@ function updateScreen() {
 //
 function setZoom() {
     zoom = 2.0;
+    zoom_mode = true;
 }
