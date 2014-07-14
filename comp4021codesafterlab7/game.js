@@ -172,8 +172,8 @@ var svgdoc = null;                          // SVG root document node
 var player = null;                          // The player object
 var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
-var score = 0;
-
+var score = 0;                              
+var bullets_left = 8;                        // store numbers of bullets left to shoot
 
 //
 // The load function for the SVG document
@@ -233,6 +233,11 @@ function createMonster(x, y) {
 // This function shoots a bullet from the player
 //
 function shootBullet() {
+    // disable shooting when no bullets left
+    if (bullets_left ==0 ){
+        return;
+    }
+
     // Disable shooting for a short period of time
     canShoot = false;
     setTimeout("canShoot = true", SHOOT_INTERVAL);
@@ -243,6 +248,11 @@ function shootBullet() {
     bullet.setAttribute("y", player.position.y + PLAYER_SIZE.h / 2 - BULLET_SIZE.h / 2);
     bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#bullet");
     svgdoc.getElementById("bullets").appendChild(bullet);
+
+    //update bullets left
+    bullets_left -=1;
+    svgdoc.getElementById("bullets_left").firstChild.data = bullets_left;
+
 }
 
 
